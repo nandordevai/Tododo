@@ -1,6 +1,6 @@
 Feature: List todos
 
-	@wip @fixture_empty
+	@fixture_empty
 	Scenario: Empty list
 		Given I am on the active todo page
 		Then I should see "No tasks. Hurray!" on the page

@@ -1,0 +1,8 @@
+{
+	"devDependencies": {
+		"protractor": "git+https://github.com/angular/protractor.git",
+		"cucumber": "0.4.x",
+		"chai": "1.9.x",
+		"chai-as-promised": "4.x.x"
+	}
+}
