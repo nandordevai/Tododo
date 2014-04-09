@@ -16,6 +16,7 @@ jshint . --reporter=jslint > tests/reports/jshint-report.txt || true
 
 # unit tests
 py.test --cov tododo.py --cov-report xml --junitxml=tests/reports/pytests.xml
+mv coverage.xml tests/reports
 
 # E2E tests
 cd tests/system
