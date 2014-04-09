@@ -1,4 +1,3 @@
-@pending
 Feature: List todos
 
 	@wip @fixture_empty
