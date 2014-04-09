@@ -2,3 +2,4 @@
 tests/reports/
 __pycache__
 .coverage
+coverage.xml
