@@ -9,7 +9,7 @@ then
 fi
 
 # PEP8
-flake8 --exclude=.ve . > tests/reports/pep8-report.txt
+flake8 --exclude=.ve . > tests/reports/pep8-report.txt || true
 
 # jshint
 jshint . --reporter=jslint > tests/reports/jshint-report.txt || true
