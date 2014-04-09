@@ -17,15 +17,12 @@
   <body>
     <div class="container">
       <h1>Tododo</h1>
-      <ul ng-controller="TaskCtrl">
-      {% raw %}
-        <li ng-hide="tasks.length">No tasks. Hurray!</li>
-        <li ng-repeat="task in tasks">{{task.text}}</li>
-      {% endraw %}
-      </ul>
+      <div ng-view></div>
     </div>
 
     <script src="/assets/angular/angular.min.js"></script>
+    <script src="/assets/angular-route/angular-route.min.js"></script>
+    <script src="/assets/js/app.js"></script>
     <script src="/assets/js/controllers.js"></script>
     <script src="/assets/jquery/dist/jquery.min.js"></script>
     <script src="/assets/bootstrap.css/js/bootstrap.min.js"></script>

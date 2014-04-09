@@ -18,9 +18,18 @@ def list_tasks():
     tasks = collection.find({'completed_on': None})
     return dumps({'tasks': [task for task in tasks]})
 
+@app.route('/archived', methods=['GET'])
+def list_archived():
+    tasks = collection.find({'completed_on': {'$ne': None}})
+    return dumps({'tasks': [task for task in tasks]})
+
 @app.route('/assets/js/<path:filename>')
-def custom_static(filename):
+def send_js(filename):
     return send_from_directory(os.path.join(app.root_path, 'js'), filename)
+
+@app.route('/templates/<path:filename>')
+def send_template(filename):
+    return send_from_directory(os.path.join(app.root_path, 'templates'), filename)
 
 if __name__ == '__main__':
     app.run()
