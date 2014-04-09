@@ -3,6 +3,11 @@
 source .ve/bin/activate
 .ve/bin/pip3 -q install -r requirements.txt
 
+if [ ! -d "tests/reports" ]
+then
+    mkdir tests/reports
+fi
+
 # PEP8
 flake8 --exclude=.ve . > tests/reports/pep8-report.txt
 
