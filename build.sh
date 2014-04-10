@@ -20,5 +20,7 @@ mv coverage.xml tests/reports
 
 # E2E tests
 cd tests/system
+python3 tododo.py &
 protractor build.js | sed "1,6 d" | sed -e :a -e '$d;N;1ba' -e 'P;D' > ../reports/report.json; echo "]" >> ../reports/report.json
+kill %python3
 python3 json2junit.py
