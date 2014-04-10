@@ -7,9 +7,10 @@ from pymongo.errors import ConnectionFailure
 
 app = Flask(__name__, static_folder='bower_components', static_url_path='/assets')
 app.config.update(DEBUG=True, TESTING=False)
+env = os.getenv('FLASK_ENV', 'dev')
 
 try:
-	collection = MongoClient('mongodb://localhost:27017/tododo').get_default_database().tasks
+	collection = MongoClient('mongodb://localhost:27017/tododo_{}'.format(env)).get_default_database().tasks
 except ConnectionFailure:
 	print('Could not connect to MongoDB')
 	os._exit(1)

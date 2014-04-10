@@ -19,7 +19,7 @@ py.test --cov tododo.py --cov-report xml --junitxml=tests/reports/pytests.xml
 mv coverage.xml tests/reports
 
 # E2E tests
-python3 tododo.py &
+FLASK_ENV=test python3 tododo.py &
 cd tests/system
 protractor build.js | sed "1,6 d" | sed -e :a -e '$d;N;1ba' -e 'P;D' > ../reports/report.json; echo "]" >> ../reports/report.json
 kill %python3

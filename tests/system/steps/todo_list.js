@@ -16,4 +16,15 @@ module.exports = function() {
         var content = $('.container');
         expect(content.getText()).to.eventually.contain(text).and.notify(callback);
     });
+
+    this.Then(/^I should see "([^"]*)" in position \#(\d+)$/, function (text, position, callback) {
+        var task = element(by.repeater('task in tasks').row(position-1));
+        expect(task.getText()).to.eventually.contain(text).and.notify(callback);
+	});
+
+	this.Then(/^I should not see "([^"]*)" in the list$/, function (text, callback) {
+        var content = $('.container');
+        expect(content.getText()).to.eventually.not.contain(text).and.notify(callback);
+	});
+
 };
