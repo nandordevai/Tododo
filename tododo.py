@@ -3,11 +3,16 @@ import os
 from flask import Flask, render_template, send_from_directory
 from bson.json_util import dumps
 from pymongo import MongoClient
+from pymongo.errors import ConnectionFailure
 
 app = Flask(__name__, static_folder='bower_components', static_url_path='/assets')
 app.config.update(DEBUG=True, TESTING=False)
 
-collection = MongoClient('mongodb://localhost:27017/tododo').get_default_database().tasks
+try:
+	collection = MongoClient('mongodb://localhost:27017/tododo').get_default_database().tasks
+except ConnectionFailure:
+	print('Could not connect to MongoDB')
+	os._exit(1)
 
 @app.route('/', methods=['GET'])
 def root():
@@ -26,6 +31,10 @@ def list_archived():
 @app.route('/assets/js/<path:filename>')
 def send_js(filename):
     return send_from_directory(os.path.join(app.root_path, 'js'), filename)
+
+@app.route('/assets/css/<path:filename>')
+def send_css(filename):
+    return send_from_directory(os.path.join(app.root_path, 'css'), filename)
 
 @app.route('/templates/<path:filename>')
 def send_template(filename):

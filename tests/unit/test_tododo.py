@@ -50,4 +50,7 @@ class TestTododo:
     def test_should_send_template(self, app):
         response = app.get('/templates/tasklist.html')
         assert response.status_code == 200
-    
+
+    def test_should_send_css_file(self, app):
+        response = app.get('/assets/css/tododo.css')
+        assert response.status_code == 200

@@ -12,7 +12,7 @@ tododoApp.config(['$routeProvider',
 				controller: 'ArchivedListCtrl'
 			}).
 			otherwise({
-				redirectTo: '/'
+				redirectTo: '/active'
 			});
 	}
 ]);
