@@ -33,3 +33,21 @@ class TestTododo:
         response = app.get('/tasks')
         tasks = loads(response.data.decode('utf-8'))['tasks']
         assert len([task for task in tasks if 'completed_on' in task.keys() and task['completed_on'] is not None]) == 0
+
+    def test_root_should_render_default_template(self, app):
+        response = app.get('/')
+        assert response.data.decode('utf-8').startswith('<!DOCTYPE html>')
+
+    def test_archivelist_should_return_archived_tasks(self, app):
+        response = app.get('/archived')
+        tasks = loads(response.data.decode('utf-8'))['tasks']
+        assert len([task for task in tasks if 'completed_on' in task.keys() and task['completed_on'] is None]) == 0
+
+    def test_should_send_js_file(self, app):
+        response = app.get('/assets/js/app.js')
+        assert response.status_code == 200
+
+    def test_should_send_template(self, app):
+        response = app.get('/templates/tasklist.html')
+        assert response.status_code == 200
+    
