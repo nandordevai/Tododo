@@ -1,0 +1,7 @@
+<ul id="tasklist">
+	<li ng-hide="tasks.length">No tasks. Hurray!</li>
+	<li ng-repeat="task in tasks">{{task.text}} <span class="due_text" ng-hide="!task.due_text">{{task.due_text}}</span></li>
+</ul>
+<form ng-submit="addTask()">
+<input ng-model="task" type="text" class="form-control" placeholder="New task">
+</form>

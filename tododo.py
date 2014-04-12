@@ -1,6 +1,5 @@
 import os
-
-from flask import Flask, render_template, send_from_directory
+from flask import Flask, render_template, send_from_directory, request, abort
 from bson.json_util import dumps
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
@@ -40,6 +39,15 @@ def send_css(filename):
 @app.route('/templates/<path:filename>')
 def send_template(filename):
     return send_from_directory(os.path.join(app.root_path, 'templates'), filename)
+
+@app.route('/tasks', methods=['PUT'])
+def add_task():
+    request_json = request.get_json()
+    if 'task' not in request_json.keys() or request_json['task'] == '':
+        abort(400)
+    task_id = collection.insert({'text': request_json['task']})
+    task = collection.find_one({'_id': task_id})
+    return dumps({'task': task})
 
 if __name__ == '__main__':
     app.run()

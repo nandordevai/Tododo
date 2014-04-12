@@ -4,11 +4,11 @@ tododoApp.config(['$routeProvider',
 	function($routeProvider) {
 		$routeProvider.
 			when('/active', {
-				templateUrl: 'templates/tasklist.html',
+				templateUrl: 'templates/active.html',
 				controller: 'TaskListCtrl'
 			}).
 			when('/archived', {
-				templateUrl: 'templates/tasklist.html',
+				templateUrl: 'templates/archived.html',
 				controller: 'ArchivedListCtrl'
 			}).
 			otherwise({

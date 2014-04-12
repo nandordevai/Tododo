@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from bson.json_util import loads
+from bson.json_util import loads, dumps
 import pytest
 from pymongo import MongoClient
 
@@ -48,9 +48,18 @@ class TestTododo:
         assert response.status_code == 200
 
     def test_should_send_template(self, app):
-        response = app.get('/templates/tasklist.html')
+        response = app.get('/templates/active.html')
         assert response.status_code == 200
 
     def test_should_send_css_file(self, app):
         response = app.get('/assets/css/tododo.css')
         assert response.status_code == 200
+
+    def test_should_add_task(self, app):
+        response = app.put('/tasks', data=dumps(dict(task='New task')), content_type='application/json')
+        task = loads(response.data.decode('utf-8'))['task']
+        assert task['text'] == 'New task'
+
+    def test_should_not_add_empty_task(self, app):
+        response = app.put('/tasks', data=dumps(dict(task='')), content_type='application/json')
+        assert response.status_code == 400

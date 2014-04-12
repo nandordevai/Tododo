@@ -5,7 +5,6 @@ Feature: List todos
 		Given I am on the active todo page
 		Then I should see "No tasks. Hurray!" on the page
 
-	@fixture_default
 	Scenario: List tasks
 		Given I am on the active todo page
 		Then I should see "First active item" in position #1
