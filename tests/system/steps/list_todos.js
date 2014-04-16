@@ -1,6 +1,5 @@
 var chai = require('chai');
 var chaiAsPromised = require('chai-as-promised');
-
 chai.use(chaiAsPromised);
 var expect = chai.expect;
 
@@ -24,7 +23,7 @@ module.exports = function() {
 
 	this.Then(/^I should not see "([^"]*)" in the list$/, function (text, callback) {
         var content = $('.container');
-        expect(content.getText()).to.eventually.not.contain(text).and.notify(callback);
+        expect(task.getText()).to.eventually.not.contain(text).and.notify(callback);
 	});
 
 };

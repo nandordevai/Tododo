@@ -15,6 +15,10 @@ tododoControllers.controller('TaskListCtrl', ['$scope', '$http',
 				$scope.task = '';
 			});
 		};
+
+		$scope.close = function(id) {
+			$http.post('/tasks/' + id, { completed_on: new Date().toISOString() });
+		};
 	}
 ]);
 

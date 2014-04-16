@@ -21,3 +21,11 @@ input[placeholder="New task"] {
 	margin-left: -13px;
 }
 
+.checkbox {
+    margin: 0;
+}
+
+input[type=checkbox]:checked + label {
+    text-decoration: line-through;
+    color: #666;
+}

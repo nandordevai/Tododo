@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from bson.json_util import loads, dumps
+from bson.objectid import ObjectId
 import pytest
 from pymongo import MongoClient
 
@@ -8,20 +9,32 @@ import tododo
 
 class TestTododo:
 
+    @classmethod
+    @pytest.fixture(scope = "class", autouse = True)
+    def setup(self):
+        self.oids = {
+            'first': ObjectId(),
+            'second': ObjectId(),
+            'archived': ObjectId()
+        }
+
     @pytest.fixture(autouse=True)
     def restore_db(self, request):
-        collection = MongoClient('mongodb://localhost:27017/tododo').get_default_database().tasks
+        collection = MongoClient('mongodb://localhost:27017/tododo_test').get_default_database().tasks
         collection.remove()
         collection.insert([
             {
+                '_id': self.oids['first'],
                 'text': 'First active item'
             },
             {
+                '_id': self.oids['second'],
                 'text': 'Second active item'
             },
             {
+                '_id': self.oids['archived'],
                 'text': 'Archived item',
-                'completed_on': datetime.now()
+                'completed_on': datetime.now().isoformat()
             }
         ])
 
@@ -63,3 +76,11 @@ class TestTododo:
     def test_should_not_add_empty_task(self, app):
         response = app.put('/tasks', data=dumps(dict(task='')), content_type='application/json')
         assert response.status_code == 400
+
+    def test_should_close_task(self, app):
+        response = app.post('/tasks/{}'.format(str(self.oids['first'])), 
+            data=dumps(dict(completed_on=datetime.now().isoformat())), content_type='application/json')
+        assert response.status_code == 200
+        response = app.get('/tasks')
+        tasks = loads(response.data.decode('utf-8'))['tasks']
+        assert len(tasks) == 1
