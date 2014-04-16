@@ -1,4 +1,8 @@
 <ul id="tasklist">
 	<li ng-hide="tasks.length">No archived tasks.</li>
-	<li ng-repeat="task in tasks">{{task.text}}</li>
+	<li ng-repeat="task in tasks">
+    <div class="checkbox">
+      <input type="checkbox" checked="checked" disabled="disabled"><label>{{task.text}}<span class="completed_on">completed on {{task.completed_on}}</span></label>
+    </div>
+  </li>
 </ul>

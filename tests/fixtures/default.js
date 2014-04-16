@@ -8,7 +8,7 @@ var data = {
         },
         {
             text: 'Archived item',
-            completed_on: new Date(),
+            completed_on: new Date().toISODate(),
         }
     ]
 };
