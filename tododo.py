@@ -53,12 +53,14 @@ def add_task():
 @app.route('/tasks/<task_id>', methods=['POST'])
 def update_task(task_id):
     request_json = request.get_json()
-    if 'completed_on' not in request_json.keys() or request_json['completed_on'] == '':
+    try:
+        completed_on = request_json['completed_on']
+    except (AttributeError, TypeError):
         abort(400)
     task = collection.find_one({'_id': ObjectId(task_id)})
     if task is None:
         abort(404)
-    collection.update({'_id': ObjectId(task_id)}, {'$set': {'completed_on': request_json['completed_on']}}, upsert=False)
+    collection.update({'_id': ObjectId(task_id)}, {'$set': {'completed_on': completed_on}}, upsert=False)
     return dumps({'success': True})
 
 if __name__ == '__main__':
