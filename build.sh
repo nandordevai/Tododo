@@ -15,7 +15,7 @@ flake8 --exclude=.ve . > tests/reports/pep8-report.txt || true
 jshint js --reporter=jslint > tests/reports/jshint-report.txt || true
 
 # unit tests
-py.test --cov tododo.py --cov-report xml --junitxml=tests/reports/pytests.xml
+py.test --cov tododo.py --cov-report xml --cov-config coverage.conf --junitxml=tests/reports/pytests.xml
 mv coverage.xml tests/reports
 
 # E2E tests
