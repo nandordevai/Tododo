@@ -1,5 +1,5 @@
 body {
-	line-height: 180%;
+	line-height: 240%;
 }
 
 #tasklist {
@@ -17,12 +17,18 @@ nav {
 	padding-right: 20px;
 }
 
-input[placeholder="New task"] {
-	margin-left: -13px;
+nav a {
+    margin-top: 1px;
+    display: inline-block;
 }
 
 .checkbox {
     margin: 0;
+    margin-top: 1px;
+}
+
+input[type=checkbox] {
+    margin-top: 10px;
 }
 
 input[type=checkbox]:checked + label {
@@ -32,4 +38,9 @@ input[type=checkbox]:checked + label {
 
 span.completed_on {
     float: right;
+}
+
+input[placeholder="New task"],
+.taskedit {
+    padding-left: 19px;
 }

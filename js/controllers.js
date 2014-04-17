@@ -2,8 +2,14 @@ var tododoControllers = angular.module('tododoControllers', []);
 
 tododoControllers.controller('TaskListCtrl', ['$scope', '$http',
 	function($scope, $http) {
+		$scope.completed = false;
+		$scope.editedText = undefined;
 		$http.get('/tasks').success(function(data) {
-			$scope.tasks = data.tasks;
+			$scope.tasks = [];
+			data.tasks.forEach(function(task) {
+				task.completed = false;
+				$scope.tasks.push(task);
+			});
 		});
 
 		$scope.addTask = function() {
@@ -16,8 +22,27 @@ tododoControllers.controller('TaskListCtrl', ['$scope', '$http',
 			});
 		};
 
-		$scope.close = function(id) {
-			$http.post('/tasks/' + id, { completed_on: new Date().toISOString() });
+		$scope.close = function(task) {
+			$http.post('/tasks/' + task._id.$oid + '/close', { completed: task.completed });
+		};
+
+		$scope.updateText = function(task, event) {
+			if (event.keyCode === 13) {
+				task.editing = false;
+				$http.post('/tasks/' + task._id.$oid + '/update', { text: task.text });
+				$scope.editedText = undefined;
+			}
+		};
+
+		$scope.startEditing = function(task) {
+			task.editing = true;
+			$scope.editedText = task.text;
+		};
+
+		$scope.cancelEditing = function(task) {
+			task.editing = false;
+			task.text = $scope.editedText;
+			$scope.editedText = undefined;
 		};
 	}
 ]);

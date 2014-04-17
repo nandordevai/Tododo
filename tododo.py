@@ -1,4 +1,6 @@
 import os
+from datetime import datetime
+
 from flask import Flask, render_template, send_from_directory, request, abort
 from bson.json_util import dumps
 from bson.objectid import ObjectId
@@ -10,10 +12,10 @@ app.config.update(DEBUG=True, TESTING=False)
 env = os.getenv('FLASK_ENV', 'test')
 
 try:
-	collection = MongoClient('mongodb://localhost:27017/tododo_{}'.format(env)).get_default_database().tasks
+    collection = MongoClient('mongodb://localhost:27017/tododo_{}'.format(env)).get_default_database().tasks
 except ConnectionFailure:
-	print('Could not connect to MongoDB')
-	os._exit(1)
+    print('Could not connect to MongoDB')
+    os._exit(1)
 
 @app.route('/', methods=['GET'])
 def root():
@@ -50,18 +52,30 @@ def add_task():
     task = collection.find_one({'_id': task_id})
     return dumps({'task': task})
 
-@app.route('/tasks/<task_id>', methods=['POST'])
-def update_task(task_id):
-    request_json = request.get_json()
+@app.route('/tasks/<task_id>/close', methods=['POST'])
+def close_task(task_id):
     try:
-        completed_on = request_json['completed_on']
-    except (AttributeError, TypeError):
+        completed = request.get_json()['completed']
+    except:
         abort(400)
-    task = collection.find_one({'_id': ObjectId(task_id)})
-    if task is None:
+    update = {'$set': {'completed_on': datetime.now().isoformat()}} if completed else {'$unset': {'completed_on': ''}}
+    result = collection.update({'_id': ObjectId(task_id)}, update, upsert=False)
+    if result['n'] == 0:
         abort(404)
-    collection.update({'_id': ObjectId(task_id)}, {'$set': {'completed_on': completed_on}}, upsert=False)
     return dumps({'success': True})
+
+@app.route('/tasks/<task_id>/update', methods=['POST'])
+def update_task_text(task_id):
+    try:
+        text = request.get_json()['text']
+    except:
+        abort(400)
+    result = collection.update({'_id': ObjectId(task_id)}, {'$set': {'text': text}}, upsert=False)
+    if result['n'] == 0:
+        abort(404)
+    # return dumps({'success': True})
+    task = collection.find_one({'_id': ObjectId(task_id)})
+    return dumps({'task': task})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')

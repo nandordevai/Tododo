@@ -1,4 +1,4 @@
-var tododoApp = angular.module('tododoApp', ['ngRoute', 'tododoControllers']);
+var tododoApp = angular.module('tododoApp', ['ngRoute', 'tododoControllers', 'tododoDirectives']);
 
 tododoApp.config(['$routeProvider',
 	function($routeProvider) {
