@@ -118,3 +118,9 @@ class TestTododo:
         response = app.get('/tasks')
         tasks = loads(response.data.decode('utf-8'))['tasks']
         assert tasks[0]['text'] == 'Updated text'
+
+    def test_should_not_update_to_empty_text(self, app):
+        response = app.post('/tasks/{}/update'.format(str(self.oids['first'])),
+            data=dumps(dict(text='')), content_type='application/json')
+        assert response.status_code == 400
+        

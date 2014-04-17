@@ -68,14 +68,14 @@ def close_task(task_id):
 def update_task_text(task_id):
     try:
         text = request.get_json()['text']
+        if text == '':
+            raise Error
     except:
         abort(400)
     result = collection.update({'_id': ObjectId(task_id)}, {'$set': {'text': text}}, upsert=False)
     if result['n'] == 0:
         abort(404)
-    # return dumps({'success': True})
-    task = collection.find_one({'_id': ObjectId(task_id)})
-    return dumps({'task': task})
+    return dumps({'success': True})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')

@@ -1,6 +1,5 @@
 Feature: Edit todo
 
-    @wip
     Scenario: Edit todo
         Given I am on the active todo page
         When I click on "First active item"

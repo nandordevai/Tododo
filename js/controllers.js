@@ -27,6 +27,9 @@ tododoControllers.controller('TaskListCtrl', ['$scope', '$http',
 		};
 
 		$scope.updateText = function(task, event) {
+			if (task.text === '') {
+				return;
+			}
 			if (event === undefined || event.keyCode === 13) {
 				task.editing = false;
 				$http.post('/tasks/' + task._id.$oid + '/update', { text: task.text });
