@@ -23,7 +23,7 @@ module.exports = function() {
 
 	this.Then(/^I should not see "([^"]*)" in the list$/, function (text, callback) {
         var content = $('.container');
-        expect(task.getText()).to.eventually.not.contain(text).and.notify(callback);
+        expect(content.getText()).to.eventually.not.contain(text).and.notify(callback);
 	});
 
 };
