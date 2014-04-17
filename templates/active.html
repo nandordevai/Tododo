@@ -2,7 +2,7 @@
 	<li ng-hide="tasks.length">No tasks. Hurray!</li>
 	<li ng-repeat="task in tasks">
   <div ng-show="task.editing">
-    <input type="text" class="form-control taskedit" ng-model="task.text" ng-blur="cancelEditing(task)" td-focus="task.editing" ng-keypress="updateText(task, $event)">
+    <input type="text" class="form-control taskedit" ng-model="task.text" ng-blur="updateText(task)" td-focus="task.editing" ng-keypress="updateText(task, $event)">
   </div>
   <div class="checkbox" ng-hide="task.editing">
     <input type="checkbox" ng-model="task.completed" ng-change="close(task)"><label ng-click="startEditing(task)">{{task.text}}<span class="due_text" ng-show="task.due_text">{{task.due_text}}</span></label>

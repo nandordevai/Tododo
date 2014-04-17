@@ -10,7 +10,7 @@ module.exports = function() {
     });
 
     this.When(/^I click on "([^"]*)"$/, function (text, callback) {
-        element(by.xpath('//a[contains(text(), "' + text + '")]')).click().then(callback);
+        element(by.xpath('//*[contains(text(), "' + text + '")]')).click().then(callback);
     });
 
 };

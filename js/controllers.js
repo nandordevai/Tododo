@@ -27,7 +27,7 @@ tododoControllers.controller('TaskListCtrl', ['$scope', '$http',
 		};
 
 		$scope.updateText = function(task, event) {
-			if (event.keyCode === 13) {
+			if (event === undefined || event.keyCode === 13) {
 				task.editing = false;
 				$http.post('/tasks/' + task._id.$oid + '/update', { text: task.text });
 				$scope.editedText = undefined;
@@ -36,13 +36,6 @@ tododoControllers.controller('TaskListCtrl', ['$scope', '$http',
 
 		$scope.startEditing = function(task) {
 			task.editing = true;
-			$scope.editedText = task.text;
-		};
-
-		$scope.cancelEditing = function(task) {
-			task.editing = false;
-			task.text = $scope.editedText;
-			$scope.editedText = undefined;
 		};
 	}
 ]);

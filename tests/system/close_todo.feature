@@ -1,6 +1,5 @@
 Feature: Close todo
 
-    @wip
     Scenario: Close todo
         Given I am on the active todo page
         When I close todo "First active item"
