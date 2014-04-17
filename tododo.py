@@ -64,4 +64,4 @@ def update_task(task_id):
     return dumps({'success': True})
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0')
