@@ -84,3 +84,13 @@ class TestTododo:
         response = app.get('/tasks')
         tasks = loads(response.data.decode('utf-8'))['tasks']
         assert len(tasks) == 1
+
+    def test_close_should_handle_invalid_request(self, app):
+        response = app.post('/tasks/{}'.format(str(self.oids['first'])))
+        assert response.status_code == 400
+
+    def test_close_should_return_404_for_nonexisting_id(self, app):
+        response = app.post('/tasks/{}'.format(str(ObjectId())), 
+            data=dumps(dict(completed_on=datetime.now().isoformat())), content_type='application/json')
+        assert response.status_code == 404
+        
