@@ -25,9 +25,7 @@ def parse(jsondata):
         return None
     text = bleach.clean(jsondata['text'], tags=[], strip=True)
     tags = [word[1:] for word in text.split() if len(word) > 1 and word[0] == '#']
-    task = {'text': text}
-    if len(tags) > 0:
-        task['tags'] = tags
+    task = {'text': text, 'tags': tags}
     return task
 
 @app.route('/', methods=['GET'])
@@ -78,17 +76,19 @@ def close_task(task_id):
     return dumps({'success': True})
 
 @app.route('/tasks/<task_id>/update', methods=['POST'])
-def update_task_text(task_id):
-    try:
-        text = request.get_json()['text']
-        if text == '':
-            raise Error
-    except:
+def update_task(task_id):
+    task = parse(request.get_json())
+    if task is None:
         abort(400)
-    result = collection.update({'_id': ObjectId(task_id)}, {'$set': {'text': text}}, upsert=False)
+    result = collection.update({'_id': ObjectId(task_id)}, {'$set': {'text': task['text'], 'tags': task['tags']}}, upsert=False)
     if result['n'] == 0:
         abort(404)
     return dumps({'success': True})
+
+@app.route('/tags/<tag>', methods=['GET'])
+def list_tasks_by_tag(tag):
+    tasks = collection.find({'tags': {'$in': [tag]}, 'completed_on': None})
+    return dumps({'tasks': [task for task in tasks]})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')

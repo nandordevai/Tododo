@@ -11,8 +11,7 @@ module.exports = function() {
     });
 
     this.When(/^I press enter$/, function (callback) {
-        browser.actions().sendKeys(protractor.Key.ENTER).perform();
-        callback();
+        browser.actions().sendKeys(protractor.Key.ENTER).perform().then(callback);
     });
 
     this.Then(/^I should see a link with text "([^"]*)"$/, function (text, callback) {

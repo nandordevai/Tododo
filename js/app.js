@@ -1,4 +1,4 @@
-var tododoApp = angular.module('tododoApp', ['ngRoute', 'tododoControllers', 'tododoDirectives', 'tododoFilters']);
+var tododoApp = angular.module('tododoApp', ['ngRoute', 'tododoControllers', 'tododoDirectives']);
 
 tododoApp.config(['$routeProvider',
 	function($routeProvider) {
@@ -10,6 +10,10 @@ tododoApp.config(['$routeProvider',
 			when('/archived', {
 				templateUrl: 'templates/archived.html',
 				controller: 'ArchivedListCtrl'
+			}).
+			when('/tags/:tag', {
+				templateUrl: 'templates/tags.html',
+				controller: 'TagListCtrl'
 			}).
 			otherwise({
 				redirectTo: '/active'

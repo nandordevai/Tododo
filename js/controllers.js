@@ -56,3 +56,12 @@ tododoControllers.controller('ArchivedListCtrl', ['$scope', '$http',
         });
     }
 ]);
+
+tododoControllers.controller('TagListCtrl', ['$scope', '$http', '$routeParams', '$controller',
+    function($scope, $http, $routeParams, $controller) {
+        $controller('TaskListCtrl', {$scope: $scope});
+        $http.get('/tags/' + $routeParams.tag).success(function(data) {
+            $scope.tasks = data.tasks;
+        });
+    }
+]);

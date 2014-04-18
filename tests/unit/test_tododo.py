@@ -37,6 +37,7 @@ class TestTododo:
                 'completed_on': datetime.now().isoformat()
             }
         ])
+        self.collection = collection
 
     def test_tasklist_should_return_list(self, app):
         response = app.get('/tasks')
@@ -131,3 +132,61 @@ class TestTododo:
             'tags': ['two', 'tags']
         }
         assert output == tododo.parse(input)
+
+    def test_taglist_should_return_list(self, app):
+        self.collection.insert([
+            {
+                '_id': ObjectId(),
+                'text': 'Todo with #tag'
+            }
+        ])
+        response = app.get('/tags/tag')
+        assert isinstance(loads(response.data.decode('utf-8'))['tasks'], list)
+
+    def test_taglist_should_return_tasks_with_tag(self, app):
+        self.collection.insert([
+            {
+                '_id': ObjectId(),
+                'text': 'Todo with #tag',
+                'tags': ['tag']
+            },
+            {
+                '_id': ObjectId(),
+                'text': 'Another todo with #tag',
+                'tags': ['tag']
+            }
+        ])
+        response = app.get('/tags/tag')
+        tasks = loads(response.data.decode('utf-8'))['tasks']
+        assert len(tasks) == 2
+        assert 'tag' in tasks[0]['tags']
+        assert 'tag' in tasks[1]['tags']
+
+    def test_taglist_should_not_return_completed_tasks(self, app):
+        self.collection.insert([
+            {
+                '_id': ObjectId(),
+                'text': 'Completed todo with #tag',
+                'tags': ['tag'],
+                'completed_on': datetime.now().isoformat()
+            }
+        ])
+        response = app.get('/tags/tag')
+        tasks = loads(response.data.decode('utf-8'))['tasks']
+        assert len(tasks) == 0
+
+    def test_update_should_update_tags(self, app):
+        oid = ObjectId()
+        self.collection.insert([
+            {
+                '_id': oid,
+                'text': 'Todo with #tag',
+                'tags': ['tag']
+            }
+        ])
+        response = app.post('/tasks/{}/update'.format(str(oid)),
+            data=dumps(dict(text='Todo with #newtag')), content_type='application/json')
+        response = app.get('/tags/tag')
+        assert len(loads(response.data.decode('utf-8'))['tasks']) == 0
+        response = app.get('/tags/newtag')
+        assert len(loads(response.data.decode('utf-8'))['tasks']) == 1
