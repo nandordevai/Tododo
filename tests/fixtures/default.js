@@ -7,7 +7,7 @@ var data = {
             text: 'Second active item'
         },
         {
-            text: 'Archived item',
+            text: 'Closed item',
             completed_on: new Date(),
         }
     ]

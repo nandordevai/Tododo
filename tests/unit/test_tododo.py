@@ -17,7 +17,7 @@ class TestTododo:
         self.oids = {
             'first': ObjectId(),
             'second': ObjectId(),
-            'archived': ObjectId()
+            'closed': ObjectId()
         }
 
     @pytest.fixture(autouse=True)
@@ -34,8 +34,8 @@ class TestTododo:
                 'text': 'Second active item'
             },
             {
-                '_id': self.oids['archived'],
-                'text': 'Archived item',
+                '_id': self.oids['closed'],
+                'text': 'Closed item',
                 'completed_on': datetime.now()
             }
         ])
@@ -45,7 +45,7 @@ class TestTododo:
         response = app.get('/tasks')
         assert isinstance(loads(response.data.decode('utf-8'))['tasks'], list)
     
-    def test_tasklist_should_not_return_archived_tasks(self, app):
+    def test_tasklist_should_not_return_closed_tasks(self, app):
         response = app.get('/tasks')
         tasks = loads(response.data.decode('utf-8'))['tasks']
         assert len([task for task in tasks if 'completed_on' in task.keys() and task['completed_on'] is not None]) == 0
@@ -54,8 +54,8 @@ class TestTododo:
         response = app.get('/')
         assert response.data.decode('utf-8').startswith('<!DOCTYPE html>')
 
-    def test_archivelist_should_return_archived_tasks(self, app):
-        response = app.get('/archived')
+    def test_archivelist_should_return_closed_tasks(self, app):
+        response = app.get('/closed')
         tasks = loads(response.data.decode('utf-8'))['tasks']
         assert len([task for task in tasks if 'completed_on' in task.keys() and task['completed_on'] is None]) == 0
 
@@ -89,7 +89,7 @@ class TestTododo:
         assert len(tasks) == 1
 
     def test_should_reopen_task(self, app):
-        response = app.post('/tasks/{}/close'.format(str(self.oids['archived'])), 
+        response = app.post('/tasks/{}/close'.format(str(self.oids['closed'])), 
             data=dumps(dict(completed=False)), content_type='application/json')
         assert response.status_code == 200
         response = app.get('/tasks')
@@ -131,7 +131,8 @@ class TestTododo:
         input = {'text': 'Task # with #two #tags'}
         output = {
             'text': input['text'],
-            'tags': ['two', 'tags']
+            'tags': ['two', 'tags'],
+            'due_on': None
         }
         assert output == tododo.parse(input)
 
@@ -193,11 +194,11 @@ class TestTododo:
         response = app.get('/tags/newtag')
         assert len(loads(response.data.decode('utf-8'))['tasks']) == 1
 
-    def test_archived_task_should_be_ordered_by_completion_date(self, app):
+    def test_closed_task_should_be_ordered_by_completion_date(self, app):
         self.collection.insert([
             {
                 '_id': ObjectId(),
-                'text': 'Archived item 2',
+                'text': 'Closed item 2',
                 'completed_on': datetime.now()
             }
         ])
@@ -205,11 +206,11 @@ class TestTododo:
         self.collection.insert([
             {
                 '_id': ObjectId(),
-                'text': 'Archived item 3',
+                'text': 'Closed item 3',
                 'completed_on': datetime.now()
             }
         ])
-        response = app.get('/archived')
+        response = app.get('/closed')
         tasks = loads(response.data.decode('utf-8'))['tasks']
         for i in range(0, len(tasks) - 2):
             assert tasks[i]['completed_on'] > tasks[i+1]['completed_on']

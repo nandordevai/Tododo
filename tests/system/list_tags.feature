@@ -1,6 +1,5 @@
 Feature: List tasks by tag
 
-    @wip
     Scenario: List tasks by tag
         Given I am on the active todo page
         When I type "New todo with #tag" into the new todo field

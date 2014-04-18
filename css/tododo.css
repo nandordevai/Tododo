@@ -38,7 +38,6 @@ input[type=checkbox] {
 
 input[type=checkbox]:checked + label {
     text-decoration: line-through;
-    color: #666;
 }
 
 span.completed_on {
@@ -50,8 +49,12 @@ input[placeholder="New task"],
     padding-left: 19px;
 }
 
+input[type=checkbox]:checked + label,
 .due_on {
     color: #666;
+}
+
+.due_on {
     float: right;
 }
 

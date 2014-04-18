@@ -9,4 +9,4 @@ Feature: List todos
 		Given I am on the active todo page
 		Then I should see "First active item" in position #1
 		And I should see "Second active item" in position #2
-		And I should not see "Archived item" in the list
+		And I should not see "Closed item" in the list

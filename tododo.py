@@ -54,8 +54,8 @@ def list_tasks():
     tasks = collection.find({'completed_on': None})
     return dumps({'tasks': [task for task in tasks]})
 
-@app.route('/archived', methods=['GET'])
-def list_archived():
+@app.route('/closed', methods=['GET'])
+def list_closed():
     tasks = collection.find({'completed_on': {'$ne': None}}).sort('completed_on', DESCENDING)
     return dumps({'tasks': [task for task in tasks]})
 

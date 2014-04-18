@@ -7,9 +7,9 @@ tododoApp.config(['$routeProvider',
 				templateUrl: 'templates/active.html',
 				controller: 'TaskListCtrl'
 			}).
-			when('/archived', {
-				templateUrl: 'templates/archived.html',
-				controller: 'ArchivedListCtrl'
+			when('/closed', {
+				templateUrl: 'templates/closed.html',
+				controller: 'ClosedListCtrl'
 			}).
 			when('/tags/:tag', {
 				templateUrl: 'templates/tags.html',

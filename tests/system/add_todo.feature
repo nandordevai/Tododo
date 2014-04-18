@@ -20,12 +20,12 @@ Feature: Add todo
 		Then I should see "New todo with tag" in position #3
 		And I should see a link with text "tag"
 
-	@wip
 	Scenario: Todo with due date
-		# A dátummezőbe csak mai nap + jövőbeli dátumok írhatóak.
-		# Az aktuális tennivalók listában a "Deadline" oszlopban megjelenik az érték és tudunk a két féle rendezés között változtatni. 
 		Given I am on the active todo page
 		When I type "New todo tomorrow" into the new todo field
 		And I press enter
 		Then I should see "New todo" in position #3
-		And I should see due date "Tomorrow 12:00" in position #3
+		And I should see a due date in position #3
+		When I type "New todo yesterday" into the new todo field
+		And I press enter
+		Then I should not see a due date in position #4

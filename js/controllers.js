@@ -50,9 +50,9 @@ tododoControllers.controller('TaskListCtrl', ['$scope', '$http', '$sce',
     }
 ]);
 
-tododoControllers.controller('ArchivedListCtrl', ['$scope', '$http',
+tododoControllers.controller('ClosedListCtrl', ['$scope', '$http',
     function($scope, $http) {
-        $http.get('/archived').success(function(data) {
+        $http.get('/closed').success(function(data) {
             $scope.tasks = data.tasks;
         });
     }
