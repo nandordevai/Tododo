@@ -1,12 +1,14 @@
 import os
 from datetime import datetime
+from time import mktime
 
 from flask import Flask, render_template, send_from_directory, request, abort
 from bson.json_util import dumps
 from bson.objectid import ObjectId
-from pymongo import MongoClient
+from pymongo import MongoClient, DESCENDING
 from pymongo.errors import ConnectionFailure
 import bleach
+import parsedatetime
 
 app = Flask(__name__, static_folder='bower_components', static_url_path='/assets')
 app.config.update(DEBUG=True, TESTING=False)
@@ -19,13 +21,24 @@ except ConnectionFailure:
     os._exit(1)
 
 def parse(jsondata):
+    def parse_date(text):
+        cal = parsedatetime.Calendar()
+        date = cal.parse(text)
+        if date[0] == 0:
+            return None
+        due_date = datetime.fromtimestamp(mktime(date[0]))
+        if due_date > datetime.now():
+            return due_date
+        else:
+            return None
+
     if (jsondata is None
         or 'text' not in jsondata.keys()
         or jsondata['text'] in (None, '')):
         return None
     text = bleach.clean(jsondata['text'], tags=[], strip=True)
     tags = [word[1:] for word in text.split() if len(word) > 1 and word[0] == '#']
-    task = {'text': text, 'tags': tags}
+    task = {'text': text, 'tags': tags, 'due_on': parse_date(text)}
     return task
 
 @app.route('/', methods=['GET'])
@@ -39,7 +52,7 @@ def list_tasks():
 
 @app.route('/archived', methods=['GET'])
 def list_archived():
-    tasks = collection.find({'completed_on': {'$ne': None}})
+    tasks = collection.find({'completed_on': {'$ne': None}}).sort('completed_on', DESCENDING)
     return dumps({'tasks': [task for task in tasks]})
 
 @app.route('/assets/js/<path:filename>')
@@ -69,7 +82,7 @@ def close_task(task_id):
         completed = request.get_json()['completed']
     except:
         abort(400)
-    update = {'$set': {'completed_on': datetime.now().isoformat()}} if completed else {'$unset': {'completed_on': ''}}
+    update = {'$set': {'completed_on': datetime.now()}} if completed else {'$unset': {'completed_on': ''}}
     result = collection.update({'_id': ObjectId(task_id)}, update, upsert=False)
     if result['n'] == 0:
         abort(404)

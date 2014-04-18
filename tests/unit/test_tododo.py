@@ -1,4 +1,6 @@
 from datetime import datetime
+import re
+import time
 
 from bson.json_util import loads, dumps
 from bson.objectid import ObjectId
@@ -34,7 +36,7 @@ class TestTododo:
             {
                 '_id': self.oids['archived'],
                 'text': 'Archived item',
-                'completed_on': datetime.now().isoformat()
+                'completed_on': datetime.now()
             }
         ])
         self.collection = collection
@@ -168,7 +170,7 @@ class TestTododo:
                 '_id': ObjectId(),
                 'text': 'Completed todo with #tag',
                 'tags': ['tag'],
-                'completed_on': datetime.now().isoformat()
+                'completed_on': datetime.now()
             }
         ])
         response = app.get('/tags/tag')
@@ -190,3 +192,24 @@ class TestTododo:
         assert len(loads(response.data.decode('utf-8'))['tasks']) == 0
         response = app.get('/tags/newtag')
         assert len(loads(response.data.decode('utf-8'))['tasks']) == 1
+
+    def test_archived_task_should_be_ordered_by_completion_date(self, app):
+        self.collection.insert([
+            {
+                '_id': ObjectId(),
+                'text': 'Archived item 2',
+                'completed_on': datetime.now()
+            }
+        ])
+        time.sleep(1)
+        self.collection.insert([
+            {
+                '_id': ObjectId(),
+                'text': 'Archived item 3',
+                'completed_on': datetime.now()
+            }
+        ])
+        response = app.get('/archived')
+        tasks = loads(response.data.decode('utf-8'))['tasks']
+        for i in range(0, len(tasks) - 2):
+            assert tasks[i]['completed_on'] > tasks[i+1]['completed_on']
