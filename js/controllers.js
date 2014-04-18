@@ -41,7 +41,8 @@ tododoControllers.controller('TaskListCtrl', ['$scope', '$http', '$sce',
 
         $scope.taglinks = function(input) {
             var output = input;
-            angular.forEach(input.match(/\#[\S]+/g), function(tag) {
+            angular.forEach(input.match(/\B\#[\S]+/g), function(tag) {
+                console.log(tag);
                 output = output.replace(tag, '<a href="#/tags/' + tag.substring(1) + '">' + tag.substring(1) + '</a>');
             });
             return $sce.trustAsHtml(output);
