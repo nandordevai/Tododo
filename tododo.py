@@ -6,6 +6,7 @@ from bson.json_util import dumps
 from bson.objectid import ObjectId
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
+import bleach
 
 app = Flask(__name__, static_folder='bower_components', static_url_path='/assets')
 app.config.update(DEBUG=True, TESTING=False)
@@ -16,6 +17,18 @@ try:
 except ConnectionFailure:
     print('Could not connect to MongoDB')
     os._exit(1)
+
+def parse(jsondata):
+    if (jsondata is None
+        or 'text' not in jsondata.keys()
+        or jsondata['text'] in (None, '')):
+        return None
+    text = bleach.clean(jsondata['text'], tags=[], strip=True)
+    tags = [word[1:] for word in text.split() if len(word) > 1 and word[0] == '#']
+    task = {'text': text}
+    if len(tags) > 0:
+        task['tags'] = tags
+    return task
 
 @app.route('/', methods=['GET'])
 def root():
@@ -45,10 +58,10 @@ def send_template(filename):
 
 @app.route('/tasks', methods=['PUT'])
 def add_task():
-    request_json = request.get_json()
-    if 'task' not in request_json.keys() or request_json['task'] == '':
+    task = parse(request.get_json())
+    if task is None:
         abort(400)
-    task_id = collection.insert({'text': request_json['task']})
+    task_id = collection.insert(task)
     task = collection.find_one({'_id': task_id})
     return dumps({'task': task})
 

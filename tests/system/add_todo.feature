@@ -12,3 +12,10 @@ Feature: Add todo
 		When I type "New todo" into the new todo field
 		And I press enter
 		Then I should see "New todo" in position #3
+
+	Scenario: Todo with tags
+		Given I am on the active todo page
+		When I type "New todo with #tag" into the new todo field
+		And I press enter
+		Then I should see "New todo with tag" in position #3
+		And I should see a link with text "tag"

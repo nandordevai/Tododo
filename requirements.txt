@@ -2,10 +2,13 @@ Flask==0.10.1
 Jinja2==2.7.2
 MarkupSafe==0.19
 Werkzeug==0.9.4
+bleach==1.4
 cov-core==1.7
 coverage==3.7.1
+html5lib==0.999
 itsdangerous==0.24
 mongomock==1.2.0
+parsedatetime==1.2
 py==1.4.20
 pymongo==2.7
 pytest==2.5.2

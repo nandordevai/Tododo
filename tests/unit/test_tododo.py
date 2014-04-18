@@ -69,12 +69,12 @@ class TestTododo:
         assert response.status_code == 200
 
     def test_should_add_task(self, app):
-        response = app.put('/tasks', data=dumps(dict(task='New task')), content_type='application/json')
+        response = app.put('/tasks', data=dumps(dict(text='New task')), content_type='application/json')
         task = loads(response.data.decode('utf-8'))['task']
         assert task['text'] == 'New task'
 
     def test_should_not_add_empty_task(self, app):
-        response = app.put('/tasks', data=dumps(dict(task='')), content_type='application/json')
+        response = app.put('/tasks', data=dumps(dict(text='')), content_type='application/json')
         assert response.status_code == 400
 
     def test_should_close_task(self, app):
@@ -123,4 +123,11 @@ class TestTododo:
         response = app.post('/tasks/{}/update'.format(str(self.oids['first'])),
             data=dumps(dict(text='')), content_type='application/json')
         assert response.status_code == 400
-        
+
+    def test_parse_should_find_nonempty_tags(self, app):
+        input = {'text': 'Task # with #two #tags'}
+        output = {
+            'text': input['text'],
+            'tags': ['two', 'tags']
+        }
+        assert output == tododo.parse(input)

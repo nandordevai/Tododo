@@ -14,4 +14,8 @@ module.exports = function() {
         browser.actions().sendKeys(protractor.Key.ENTER).perform();
         callback();
     });
+
+    this.Then(/^I should see a link with text "([^"]*)"$/, function (text, callback) {
+        expect(element(by.linkText(text)).isPresent()).to.eventually.be.true.and.notify(callback);
+    });
 };
