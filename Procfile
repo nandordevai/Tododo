@@ -1,1 +1,1 @@
-web: python tododo.py
+web: gunicorn tododo:app
