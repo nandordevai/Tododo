@@ -1,5 +1,7 @@
 <ul id="tasklist">
-  <li ng-hide="tasks.length" class="notasks">No closed tasks.</li>
+  <div class="checkbox notasks" ng-hide="tasks.length">
+    <input type="checkbox" disabled checked><label>No closed tasks.</label>
+  </div>
 	<li ng-show="tasks.length" class="due_on">Completed on</li>
 	<li ng-repeat="task in tasks">
     <div class="checkbox">
