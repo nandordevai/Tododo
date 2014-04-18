@@ -54,7 +54,7 @@ class TestTododo:
         response = app.get('/')
         assert response.data.decode('utf-8').startswith('<!DOCTYPE html>')
 
-    def test_archivelist_should_return_closed_tasks(self, app):
+    def test_list_closed_should_return_closed_tasks(self, app):
         response = app.get('/closed')
         tasks = loads(response.data.decode('utf-8'))['tasks']
         assert len([task for task in tasks if 'completed_on' in task.keys() and task['completed_on'] is None]) == 0
