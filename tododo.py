@@ -15,7 +15,11 @@ app.config.update(DEBUG=True, TESTING=False)
 env = os.getenv('FLASK_ENV', 'test')
 
 try:
-    collection = MongoClient('mongodb://localhost:27017/tododo_{}'.format(env)).get_default_database().tasks
+    if env in ('dev', 'test'):
+        mongourl = 'mongodb://localhost:27017/tododo_{}'.format(env)
+    else:
+        mongourl = os.getenv('MONGOHQ_URL')
+    collection = MongoClient(mongourl).get_default_database().tasks
 except ConnectionFailure:
     print('Could not connect to MongoDB')
     os._exit(1)
