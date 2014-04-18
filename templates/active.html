@@ -1,5 +1,5 @@
 <ul id="tasklist">
-	<li ng-hide="tasks.length">No tasks. Hurray!</li>
+	<li ng-hide="tasks.length" class="notasks">No tasks. Hurray!</li>
   <li ng-show="tasks.length"><span class="due_on"><a href="">Due on</a></span></li>
 	<li ng-repeat="task in tasks">
   <div ng-show="task.editing">

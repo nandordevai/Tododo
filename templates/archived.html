@@ -1,5 +1,5 @@
 <ul id="tasklist">
-  <li ng-hide="tasks.length">No archived tasks.</li>
+  <li ng-hide="tasks.length" class="notasks">No archived tasks.</li>
 	<li ng-show="tasks.length" class="due_on">Completed on</li>
 	<li ng-repeat="task in tasks">
     <div class="checkbox">
