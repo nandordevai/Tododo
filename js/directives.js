@@ -13,3 +13,20 @@ tododoDirectives.directive('tdFocus', function($timeout) {
         }
     };
 });
+
+tododoDirectives.directive('tdActive', ['$location', function(location) {
+    return {
+        restrict: 'A',
+        link: function(scope, element, attrs) {
+            var path = attrs.href.substring(1);
+            scope.location = location;
+            scope.$watch('location.path()', function(newPath) {
+                if (path === newPath) {
+                    element.addClass('active');
+                } else {
+                    element.removeClass('active');
+                }
+            });
+        }
+    };
+}]);

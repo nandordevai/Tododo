@@ -7,29 +7,10 @@ body {
 	padding: 0;
 }
 
-h1 {
-	margin-top: 60px;
-	margin-bottom: 20px;
-}
-
 h1::first-letter {
     color: white;
     background: #333;
     padding-left: 10px;
-}
-
-nav {
-	text-align: right;
-	padding-right: 20px;
-}
-
-nav,
-.notasks {
-    padding-top: 33px;
-}
-
-nav a {
-    display: inline-block;
 }
 
 .checkbox {
@@ -70,4 +51,34 @@ input[type=checkbox]:checked + label,
 
 li {
     clear: right;
+}
+
+nav a {
+    display: inline;
+    padding-right: 20px;
+}
+
+.active {
+    text-decoration: underline;
+}
+
+/* desktop only */
+@media screen and (min-width: 1024px) {
+
+    h1 {
+        margin-top: 60px;
+        margin-bottom: 20px;
+    }
+
+    nav a {
+        display: block;
+        text-align: right;
+        padding-right: 0;
+    }
+
+    nav,
+    .notasks {
+        padding-top: 33px;
+    }
+
 }
