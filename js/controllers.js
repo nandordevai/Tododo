@@ -7,6 +7,7 @@ tododoControllers.controller('TaskListCtrl', ['$scope', '$http', '$sce',
             $scope.tasks = [];
             data.tasks.forEach(function(task) {
                 task.completed = false;
+                task.originalText = task.text;
                 $scope.tasks.push(task);
             });
         });
@@ -25,13 +26,19 @@ tododoControllers.controller('TaskListCtrl', ['$scope', '$http', '$sce',
             $http.post('/tasks/' + task._id.$oid + '/close', { completed: task.completed });
         };
 
-        $scope.updateText = function(task, event) {
+        $scope.updateTask = function(task, event) {
             if (task.text === '') {
                 return;
             }
             if (event === undefined || event.keyCode === 13) {
                 task.editing = false;
-                $http.post('/tasks/' + task._id.$oid + '/update', { text: task.text });
+                if (task.text === task.originalText) {
+                    return;
+                }
+                $http.post('/tasks/' + task._id.$oid, { text: task.text }).success(function(data) {
+                    task.originalText = task.text;
+                    task.due_on = data.task.due_on;
+                });
             }
         };
 

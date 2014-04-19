@@ -92,15 +92,18 @@ def close_task(task_id):
         abort(404)
     return dumps({'success': True})
 
-@app.route('/tasks/<task_id>/update', methods=['POST'])
+@app.route('/tasks/<task_id>', methods=['POST'])
 def update_task(task_id):
     task = parse(request.get_json())
     if task is None:
         abort(400)
-    result = collection.update({'_id': ObjectId(task_id)}, {'$set': {'text': task['text'], 'tags': task['tags']}}, upsert=False)
+    result = collection.update(
+        {'_id': ObjectId(task_id)}, 
+        {'$set': task}, 
+        upsert=False)
     if result['n'] == 0:
         abort(404)
-    return dumps({'success': True})
+    return dumps({'task': collection.find_one({'_id': ObjectId(task_id)})})
 
 @app.route('/tags/<tag>', methods=['GET'])
 def list_tasks_by_tag(tag):

@@ -106,16 +106,16 @@ class TestTododo:
         assert response.status_code == 404
 
     def test_update_should_handle_invalid_request(self, app):
-        response = app.post('/tasks/{}/update'.format(str(self.oids['first'])))
+        response = app.post('/tasks/{}'.format(str(self.oids['first'])))
         assert response.status_code == 400
 
     def test_update_should_return_404_for_nonexisting_id(self, app):
-        response = app.post('/tasks/{}/update'.format(str(ObjectId())), 
+        response = app.post('/tasks/{}'.format(str(ObjectId())), 
             data=dumps(dict(text=True)), content_type='application/json')
         assert response.status_code == 404
     
     def test_should_update_task_text(self, app):
-        response = app.post('/tasks/{}/update'.format(str(self.oids['first'])),
+        response = app.post('/tasks/{}'.format(str(self.oids['first'])),
             data=dumps(dict(text='Updated text')), content_type='application/json')
         assert response.status_code == 200
         response = app.get('/tasks')
@@ -123,7 +123,7 @@ class TestTododo:
         assert tasks[0]['text'] == 'Updated text'
 
     def test_should_not_update_to_empty_text(self, app):
-        response = app.post('/tasks/{}/update'.format(str(self.oids['first'])),
+        response = app.post('/tasks/{}'.format(str(self.oids['first'])),
             data=dumps(dict(text='')), content_type='application/json')
         assert response.status_code == 400
 
@@ -187,7 +187,7 @@ class TestTododo:
                 'tags': ['tag']
             }
         ])
-        response = app.post('/tasks/{}/update'.format(str(oid)),
+        response = app.post('/tasks/{}'.format(str(oid)),
             data=dumps(dict(text='Todo with #newtag')), content_type='application/json')
         response = app.get('/tags/tag')
         assert len(loads(response.data.decode('utf-8'))['tasks']) == 0
