@@ -1,11 +1,12 @@
 <ul id="tasklist">
 	<li ng-hide="tasks.length">No tasks. Hurray!</li>
-	<li ng-repeat="task in tasks">
+  <li ng-show="tasks.length" class="due_on">Due on</li>
+  <li ng-repeat="task in tasks">
   <div ng-show="task.editing">
     <input type="text" class="form-control taskedit" ng-model="task.text" ng-blur="updateTask(task)" td-focus="task.editing" ng-keypress="updateTask(task, $event)">
   </div>
   <div class="checkbox" ng-hide="task.editing">
-    <input type="checkbox" ng-model="task.completed" ng-change="close(task)"><label ng-click="startEditing(task)" ng-bind-html="taglinks(task.text)"><span class="due_text" ng-show="task.due_text">{{task.due_text}}</span></label>
+    <input type="checkbox" ng-model="task.completed" ng-change="close(task)"><label ng-click="startEditing(task)" ng-bind-html="taglinks(task.text)"></label><span class="due_on">{{task.due_on.$date|date:'MMMM dd. HH:mm'}}</span>
   </div>
   </li>
 </ul>
