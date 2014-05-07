@@ -1,7 +1,4 @@
-var chai = require('chai');
-var chaiAsPromised = require('chai-as-promised');
-chai.use(chaiAsPromised);
-var expect = chai.expect;
+var assert = require('assert');
 
 module.exports = function() {
 
@@ -15,16 +12,21 @@ module.exports = function() {
     });
 
     this.Then(/^I should see a link with text "([^"]*)"$/, function (text, callback) {
-        expect(element(by.linkText(text)).isPresent()).to.eventually.be.true.and.notify(callback);
+        element(by.linkText(text)).then(function(el) {
+            assert(el.isPresent());
+            callback();
+        });
     });
 
     this.Then(/^I should see a due date in position \#(\d+)$/, function (position, callback) {
         var el = element(by.repeater('task in tasks').row(position-1)).$('.due_on');
-        expect(el.isDisplayed()).to.eventually.be.true.and.notify(callback);
+        assert(el.isDisplayed());
+        callback();
     });
 
     this.Then(/^I should not see a due date in position \#(\d+)$/, function (position, callback) {
         var el = element(by.repeater('task in tasks').row(position-1)).$('.due_on');
-        expect(el.isDisplayed()).to.eventually.be.true.and.notify(callback);
+        assert(el.isDisplayed());
+        callback();
     });
 };

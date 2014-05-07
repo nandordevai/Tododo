@@ -1,29 +1,37 @@
-var chai = require('chai');
-var chaiAsPromised = require('chai-as-promised');
-chai.use(chaiAsPromised);
-var expect = chai.expect;
+var assert = require('assert');
+
+String.prototype.contains = function(str) {
+    return this.indexOf(str) !== -1;
+};
 
 module.exports = function() {
 
     this.Given(/^I am on the active todo page$/, function (callback) {
         var url = 'http://localhost:5000/';
-        browser.get(url);
-        callback();
+        browser.get(url).then(function() {
+            callback();
+        });
     });
 
     this.Then(/^I should see "([^"]*)" on the page$/, function (text, callback) {
-        var content = $('.container');
-        expect(content.getText()).to.eventually.contain(text).and.notify(callback);
+        $('.container').getText().then(function(content) {
+            assert(content.contains(text));
+            callback();
+        });
     });
 
     this.Then(/^I should see "([^"]*)" in position \#(\d+)$/, function (text, position, callback) {
-        var task = element(by.repeater('task in tasks').row(position-1));
-        expect(task.getText()).to.eventually.contain(text).and.notify(callback);
+        element(by.repeater('task in tasks').row(position-1)).getText().then(function(task) {
+            assert(task.contains(text));
+            callback();
+        });
 	});
 
 	this.Then(/^I should not see "([^"]*)" in the list$/, function (text, callback) {
-        var content = $('.container');
-        expect(content.getText()).to.eventually.not.contain(text).and.notify(callback);
+        $('.container').getText().then(function(content) {
+            assert(!content.contains(text));
+            callback();
+        });
 	});
 
 };

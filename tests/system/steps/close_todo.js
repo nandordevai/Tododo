@@ -1,8 +1,3 @@
-var chai = require('chai');
-var chaiAsPromised = require('chai-as-promised');
-chai.use(chaiAsPromised);
-var expect = chai.expect;
-
 module.exports = function() {
 
     this.When(/^I close todo "([^"]*)"$/, function (text, callback) {
