@@ -5,7 +5,7 @@ from time import mktime
 from flask import Flask, render_template, send_from_directory, request, abort
 from bson.json_util import dumps
 from bson.objectid import ObjectId
-from pymongo import MongoClient, DESCENDING
+from pymongo import MongoClient, DESCENDING, ASCENDING
 from pymongo.errors import ConnectionFailure
 import bleach
 import parsedatetime
@@ -51,7 +51,7 @@ def root():
 
 @app.route('/tasks', methods=['GET'])
 def list_tasks():
-    tasks = collection.find({'completed_on': None})
+    tasks = collection.find({'completed_on': None}).sort('_id', ASCENDING)
     return dumps({'tasks': [task for task in tasks]})
 
 @app.route('/closed', methods=['GET'])
