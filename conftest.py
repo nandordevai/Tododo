@@ -4,6 +4,7 @@ import pytest
 
 import tododo
 
+
 @pytest.fixture
 def app():
     app = tododo.app
